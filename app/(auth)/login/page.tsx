@@ -15,7 +15,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { LoginValidation } from '@/lib/validations/user'
-import { Fetch } from '@/lib/utils'
+import { Fetch } from '@/lib/fetch'
+import Link from 'next/link'
 
 const LoginPage = () => {
   const router = useRouter()
@@ -36,9 +37,7 @@ const LoginPage = () => {
       type: 'POST',
       data: { email, password }
     })
-    if (data) {
-      router.push('/user')
-    }
+    data && router.push('/user')
   }
 
   return (
@@ -86,9 +85,17 @@ const LoginPage = () => {
             )}
           />
 
-          <Button type='submit' className='mt-10 w-full'>
-            SUBMIT
-          </Button>
+          <div className='flex items-center justify-start'>
+            <Button type='submit' className='text-white'>
+              SUBMIT
+            </Button>
+            <p className='ml-4'>
+              I don't have an account,{' '}
+              <Link href={'/register'} className='text-link'>
+                GO TO REIGSTER
+              </Link>
+            </p>
+          </div>
         </form>
       </Form>
     </div>

@@ -4,7 +4,11 @@ import { cookies } from "next/headers";
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (!pathname.includes("/api/login")) {
+  const { method } = request;
+  if (
+    !pathname.includes("/api/login") &&
+    !(pathname.includes("/api/user") && method === "POST")
+  ) {
     const cookieStore = cookies();
     const token = cookieStore.get("token")?.value;
 

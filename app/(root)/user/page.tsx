@@ -11,16 +11,17 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { Fetch } from '@/lib/utils'
+import { Fetch } from '@/lib/fetch'
 import Image from 'next/image'
 import { USER } from '@/lib/types'
 
 const UserPage = () => {
   const [list, setList] = useState<Array<USER>>([])
+
   const getList = async () => {
     const list = await Fetch({
       url: '/api/user',
-      data: { page: 1, perPage: 2 }
+      data: { page: 1, perPage: 20 }
     })
     setList(list || [])
   }
@@ -45,7 +46,7 @@ const UserPage = () => {
         </TableHeader>
         <TableBody>
           {list.map((item: USER) => (
-            <TableRow>
+            <TableRow key={item._id}>
               <TableCell className='font-medium'>
                 <Image src={item?.image ?? ''} alt='' width={60} height={60} />
               </TableCell>

@@ -17,6 +17,9 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { UserValidation } from '@/lib/validations/user'
 import { uploadImage } from '@/lib/cloudinary'
+import Link from 'next/link'
+import { Fetch } from '@/lib/fetch'
+import { error } from 'console'
 
 const RegisterPage = () => {
   const router = useRouter()
@@ -35,15 +38,13 @@ const RegisterPage = () => {
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     const { nickname, email, password, image = '' } = values
-    try {
-      // const data = await createUser({ nickname, email, password, image })
-      router.push('/login')
-    } catch (error: any) {
-      toast({
-        description: error?.message ?? 'Register error.',
-        variant: 'destructive'
-      })
-    }
+    const data = await Fetch({
+      url: '/api/user',
+      type: 'POST',
+      data: { nickname, email, password, image }
+    })
+
+    data && router.push('/login')
   }
 
   return (
@@ -67,10 +68,17 @@ const RegisterPage = () => {
                       type='file'
                       onChange={async (e: any) => {
                         const file = e.target.files[0]
+                        if (!file) return
                         const data = await uploadImage(file)
-                        if (data.url) {
+                        if (data?.url) {
                           form.setValue('image', data.url)
+                        } else {
+                          toast({
+                            description: data?.error?.message ?? '',
+                            variant: 'destructive'
+                          })
                         }
+                        e.target.value = ''
                       }}
                     />
                   </div>
@@ -148,9 +156,17 @@ const RegisterPage = () => {
             )}
           />
 
-          <Button type='submit' className='mt-10 w-full'>
-            SUBMIT
-          </Button>
+          <div className='flex items-center justify-start'>
+            <Button type='submit' className='text-white'>
+              SUBMIT
+            </Button>
+            <p className='ml-4'>
+              I had an account,{' '}
+              <Link href={'/login'} className='text-link'>
+                GO TO LOGIN
+              </Link>
+            </p>
+          </div>
         </form>
       </Form>
     </div>
