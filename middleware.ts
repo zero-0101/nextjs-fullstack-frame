@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
 
     if (!token) {
       return Response.json(
-        { success: false, message: "authentication failed" },
+        { success: false, message: "authentication failed", status: 401 },
         { status: 401 }
       );
     }

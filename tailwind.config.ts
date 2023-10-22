@@ -51,6 +51,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         link: "rgb(14 165 233)",
+        disable: "rgb(107 114 128)",
       },
       borderRadius: {
         lg: "var(--radius)",

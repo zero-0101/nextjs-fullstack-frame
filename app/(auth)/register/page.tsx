@@ -19,7 +19,6 @@ import { UserValidation } from '@/lib/validations/user'
 import { uploadImage } from '@/lib/cloudinary'
 import Link from 'next/link'
 import { Fetch } from '@/lib/fetch'
-import { error } from 'console'
 
 const RegisterPage = () => {
   const router = useRouter()

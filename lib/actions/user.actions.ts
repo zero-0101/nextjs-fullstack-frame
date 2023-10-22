@@ -22,7 +22,7 @@ export async function createUser({
       $or: [{ email: email }, { nickname: nickname }],
     });
     if (user) {
-      return { message: "The User has existed.", success: false };
+      return { message: "The User has existed.", success: false, data: false };
     }
 
     const newUser = new User({
@@ -34,7 +34,7 @@ export async function createUser({
 
     await newUser.save();
 
-    return { message: "Create successfull.", success: true };
+    return { message: "Create successfull.", success: true, data: true };
   } catch (error) {
     throw error;
   }
@@ -93,6 +93,18 @@ export async function QueryUsers({
       return reset;
     });
     return { message: "", success: true, data: list };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function DeleteUser(id: string) {
+  try {
+    connectToDB();
+
+    await User.findByIdAndDelete(id);
+
+    return { message: "", success: true, data: true };
   } catch (error) {
     throw error;
   }

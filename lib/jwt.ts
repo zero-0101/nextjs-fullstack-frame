@@ -28,7 +28,7 @@ export function isAuthenticated() {
   } catch (error) {
     console.log(error);
     return Response.json(
-      { success: false, message: "authentication failed" },
+      { success: false, message: "authentication failed", status: 401 },
       { status: 401 }
     );
   }

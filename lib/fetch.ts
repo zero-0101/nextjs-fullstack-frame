@@ -24,9 +24,12 @@ export async function Fetch({ url, data, type = "GET" }: FetchOptions) {
   return fetch(_url, options)
     .then((resp) => resp.json())
     .then((data) => {
+      if (data?.status === 401) {
+        location.href = "/login";
+        return;
+      }
       if (!data.success) {
         toast({ description: data.message, variant: "destructive" });
-        location.href = "/login";
         return;
       } else {
         return data.data;
