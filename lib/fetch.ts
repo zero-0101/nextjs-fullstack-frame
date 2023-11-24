@@ -22,12 +22,22 @@ export async function Fetch({ url, data, type = "GET" }: FetchOptions) {
   }
 
   return fetch(_url, options)
-    .then((resp) => resp.json())
+    .then((resp) => {
+      if (resp.status !== 200) {
+        toast({
+          description: resp?.statusText ?? resp.status,
+          variant: "destructive",
+        });
+      } else {
+        return resp.json();
+      }
+    })
     .then((data) => {
       if (data?.status === 401) {
         location.href = "/login";
         return;
       }
+
       if (!data.success) {
         toast({ description: data.message, variant: "destructive" });
         return;
@@ -36,10 +46,10 @@ export async function Fetch({ url, data, type = "GET" }: FetchOptions) {
       }
     })
     .catch((error) => {
-      toast({
-        description: error?.message ?? "Register error.",
-        variant: "destructive",
-      });
+      // toast({
+      //   description: error?.message ?? "Register error.",
+      //   variant: "destructive",
+      // });
       return;
     });
 }

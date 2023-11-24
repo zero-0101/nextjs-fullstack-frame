@@ -1,6 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import * as z from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { UpdateUserValidation } from '@/lib/validations/user'
 import {
   Table,
   TableBody,
@@ -18,14 +22,34 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle
+} from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Fetch } from '@/lib/fetch'
 import Image from 'next/image'
 import { USER } from '@/lib/types'
 import { toast } from '@/components/ui/use-toast'
+import { uploadImage } from '@/lib/cloudinary'
 
 const UserPage = () => {
   const [dialogDetails, setDialogDetails] = useState({
+    open: false,
+    id: ''
+  })
+  const [sheetDetail, setSheetDetail] = useState({
     open: false,
     id: ''
   })
@@ -42,8 +66,8 @@ const UserPage = () => {
       url: `/api/user/${id}`,
       type: 'DELETE'
     })
-    toast({ description: 'Deleted successfull' })
     if (data) {
+      toast({ description: 'Deleted successfull' })
       setDialogDetails({ open: false, id: '' })
       getList()
     }
@@ -85,6 +109,28 @@ const UserPage = () => {
     }
   }
 
+  const form = useForm({
+    resolver: zodResolver(UpdateUserValidation),
+    defaultValues: {
+      nickname: '',
+      image: ''
+    }
+  })
+
+  const onSubmit = async (values: z.infer<typeof UpdateUserValidation>) => {
+    const { nickname, image = '' } = values
+    const data = await Fetch({
+      url: '/api/user',
+      type: 'PUT',
+      data: { nickname, image, id: sheetDetail.id }
+    })
+    if (data) {
+      toast({ description: 'Edit successfull' })
+      setSheetDetail({ open: false, id: '' })
+      getList()
+    }
+  }
+
   useEffect(() => {
     getList()
   }, [])
@@ -114,7 +160,20 @@ const UserPage = () => {
               <TableCell>{item.nickname}</TableCell>
               <TableCell>{item.email}</TableCell>
               <TableCell>
-                <Button>EDIT</Button>
+                <Button
+                  onClick={() => {
+                    setSheetDetail({
+                      open: true,
+                      id: item._id!
+                    })
+                    form.reset({
+                      nickname: item?.nickname ?? '',
+                      image: item?.image ?? ''
+                    })
+                  }}
+                >
+                  EDIT
+                </Button>
                 <Button
                   onClick={() => {
                     setDialogDetails({
@@ -211,6 +270,89 @@ const UserPage = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Sheet
+        open={sheetDetail.open}
+        onOpenChange={(open: boolean) => {
+          !open && setSheetDetail({ open: open, id: '' })
+        }}
+      >
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Editing</SheetTitle>
+          </SheetHeader>
+
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='mt-10 flex flex-col justify-start gap-10'
+            >
+              <FormField
+                control={form.control}
+                name='image'
+                render={({ field }) => {
+                  const _val = field.value
+                  return (
+                    <FormItem>
+                      <FormLabel>Profile</FormLabel>
+                      <FormControl>
+                        <div className='w-64'>
+                          <input
+                            type='file'
+                            onChange={async (e: any) => {
+                              const file = e.target.files[0]
+                              if (!file) return
+                              const data = await uploadImage(file)
+                              if (data?.url) {
+                                form.setValue('image', data.url)
+                              } else {
+                                toast({
+                                  description: data?.error?.message ?? '',
+                                  variant: 'destructive'
+                                })
+                              }
+                              e.target.value = ''
+                            }}
+                          />
+                          {_val && (
+                            <Image
+                              src={_val}
+                              alt='image'
+                              width={60}
+                              height={60}
+                            />
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
+              />
+
+              <FormField
+                control={form.control}
+                name='nickname'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nickname</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Please enter nickname' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className='flex items-center justify-start'>
+                <Button type='submit' className='text-white'>
+                  SUBMIT
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

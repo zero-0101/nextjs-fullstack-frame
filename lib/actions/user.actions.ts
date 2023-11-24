@@ -98,6 +98,27 @@ export async function QueryUsers({
   }
 }
 
+export async function EditUser(
+  id: string,
+  { nickname, image }: { nickname: string; image: string }
+) {
+  try {
+    connectToDB();
+
+    const user = await User.findByIdAndUpdate(id, {
+      nickname,
+      image,
+    });
+
+    if (user) {
+      return { message: "", success: true, data: true };
+    }
+    return { message: "Updated failure.", success: false };
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function DeleteUser(id: string) {
   try {
     connectToDB();

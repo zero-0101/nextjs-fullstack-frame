@@ -19,3 +19,8 @@ export const LoginValidation = z.object({
   email: z.string().email(),
   password: z.string().min(8, { message: "Password minimun length is 8." }),
 });
+
+export const UpdateUserValidation = z.object({
+  nickname: z.string().min(4, { message: "Minimun 4 characters" }),
+  image: z.string(),
+});
