@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function SideBar () {
   return (
@@ -10,11 +11,15 @@ export default function SideBar () {
 
       <nav>
         <ol>
-          <li className='text-center py-4 border-b cursor-pointer hover:bg-slate-400 hover:text-white'>
-            Dashboard
+          <li className='text-center border-b cursor-pointer hover:bg-slate-400 hover:text-white'>
+            <Link className='block py-4' href='/dashboard'>
+              Dashboard
+            </Link>
           </li>
-          <li className='text-center py-4 border-b cursor-pointer hover:bg-slate-400 hover:text-white'>
-            Users
+          <li className='text-center border-b cursor-pointer hover:bg-slate-400 hover:text-white'>
+            <Link className='block py-4' href='/user'>
+              Users
+            </Link>
           </li>
         </ol>
       </nav>
