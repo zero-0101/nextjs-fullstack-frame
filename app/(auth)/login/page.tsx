@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { LoginValidation } from '@/lib/validations/user'
 import { Fetch } from '@/lib/fetch'
 import Link from 'next/link'
+import { setStorage } from '@/lib/utils'
 
 const LoginPage = () => {
   const router = useRouter()
@@ -37,7 +38,10 @@ const LoginPage = () => {
       type: 'POST',
       data: { email, password }
     })
-    data && router.push('/user')
+    if (data) {
+      setStorage(data, 'LOGIN')
+      router.push('/user')
+    }
   }
 
   return (
