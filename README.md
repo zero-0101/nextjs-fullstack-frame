@@ -2,7 +2,16 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First
+1. Set up your MongoDB database by providing the MONGODB_URL in the designated fields.
+
+2. Define the SECRET_KEY for token generation.
+
+3. Access the upload configuration in UploadThing. Provide values for NEXT_PUBLIC_UPLOAD_PRESET and NEXT_PUBLIC_CLOUD_NAME. Use the straightforward method to upload images, and feel free to customize it based on your specific requirements.
+
+Second, copy file `example.env` and then change name into `.env.local`
+
+Third, run the development server:
 
 ```bash
 npm run dev

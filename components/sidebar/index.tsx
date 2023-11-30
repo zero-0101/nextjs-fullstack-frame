@@ -4,7 +4,7 @@ import Link from 'next/link'
 export default function SideBar () {
   return (
     <aside className='w-40 bg-white'>
-      <div className='flex justify-center'>
+      <div className='flex justify-center border-r'>
         <Image src='/assets/logo.png' width={80} height={80} alt='logo'></Image>
       </div>
       <hr />

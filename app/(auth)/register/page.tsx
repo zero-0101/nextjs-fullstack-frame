@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import * as z from 'zod'
+import Link from 'next/link'
+import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -17,7 +19,6 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { UserValidation } from '@/lib/validations/user'
 import { uploadImage } from '@/lib/cloudinary'
-import Link from 'next/link'
 import { Fetch } from '@/lib/fetch'
 
 const RegisterPage = () => {
@@ -80,6 +81,7 @@ const RegisterPage = () => {
                         e.target.value = ''
                       }}
                     />
+                    {field.value && <Image src={field.value} alt='' width={200} height={100}></Image>}
                   </div>
                 </FormControl>
                 <FormMessage />
