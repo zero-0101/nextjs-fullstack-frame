@@ -31,7 +31,4 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Demonstrate
 
-<video width="640" height="360" controls>
-  <source src="./assets/demonstrate.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![Video Title](https://i9.ytimg.com/vi/ISenGy-Zwis/mqdefault.jpg?sqp=CMzAqKsG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFogXyhlMA8=&rs=AOn4CLCfQJfAi0l8jgxna29Ud4DL749A2g)](https://youtu.be/ISenGy-Zwis)
